@@ -15,20 +15,26 @@ yaml.default_flow_style = False
 
 configConfig = yaml.load(open("FoxyProxy.yaml"))
 
-# pp(configConfig)
-
 for i, rule in enumerate(configConfig['rules']):
     rule['blackPatterns'] = rule['denyPatterns']
     rule['whitePatterns'] = rule['allowPatterns']
+    rule['index'] = i
+    rule['active'] = True
 
     if rule['title'] != "Default no proxy":
         rule['blackPatterns'] += configConfig['commonDenyPatterns']
-    rule = configConfig['defaultRuleValues'] | rule
+    final_rule = configConfig['defaultRuleValues'].copy()
+    final_rule.update(rule)
+    rule = final_rule
 
     for j, pattern in enumerate(rule['blackPatterns']):
-        rule['blackPatterns'][j] = configConfig['defaultPatternValues'] | pattern
+        final_pattern = configConfig['defaultPatternValues'].copy()
+        final_pattern.update(pattern)
+        rule['blackPatterns'][j] = final_pattern
     for j, pattern in enumerate(rule['whitePatterns']):
-        rule['whitePatterns'][j] = configConfig['defaultPatternValues'] | pattern
+        final_pattern = configConfig['defaultPatternValues'].copy()
+        final_pattern.update(pattern)
+        rule['whitePatterns'][j] = final_pattern
 
     configConfig.insert(i, ''.join(random.choice(characters) for i in range(20)), rule)
 
