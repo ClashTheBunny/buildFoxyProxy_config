@@ -1,0 +1,52 @@
+rules:
+  - color: '#66cc66'
+    port: 8124
+    title: Home Servers (example.org)
+    denyPatterns: []
+    allowPatterns:
+    - title: example.org
+      pattern: '*.example.org'
+    - pattern: 192.168.1.*
+      title: IPs too!
+
+  - color: '#0055e5'
+    title: Default no proxy
+    type: 5
+    denyPatterns: []
+    allowPatterns:
+    - pattern: '*'
+      title: all URLs
+
+commonDenyPatterns:
+  - pattern: ^(?:[^:@/]+(?::[^@/]+)?@)?(?:localhost|127\.\d+\.\d+\.\d+)(?::\d+)?(?:/.*)?$
+    title: local hostnames (usually no dots in the name). Pattern exists because 'Do
+      not use this proxy for localhost and intranet/private IP addresses' is checked.
+    type: 2
+  - pattern: ^(?:[^:@/]+(?::[^@/]+)?@)?(?:192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)(?::\d+)?(?:/.*)?$
+    title: local subnets (IANA reserved address space). Pattern exists because 'Do
+      not use this proxy for localhost and intranet/private IP addresses' is checked.
+    type: 2
+  - pattern: ^(?:[^:@/]+(?::[^@/]+)?@)?[\w-]+(?::\d+)?(?:/.*)?$
+    title: localhost - matches the local host optionally prefixed by a user:password
+      authentication string and optionally suffixed by a port number. The entire local
+      subnet (127.0.0.0/8) matches. Pattern exists because 'Do not use this proxy
+      for localhost and intranet/private IP addresses' is checked.
+    type: 2
+
+defaultRuleValues:
+  type: 3
+  active: True
+  proxyDNS: True
+  address: "127.0.0.1"
+
+defaultPatternValues:
+  type: 1
+  protocols: 1
+  active: True
+
+mode: patterns
+foxyProxyEdition: standard
+sync: true
+logging:
+  active: true
+  maxSize: 500
